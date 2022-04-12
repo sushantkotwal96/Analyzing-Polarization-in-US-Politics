@@ -1,0 +1,758 @@
+---
+title: "Mini Project 2"
+output: pdf_document
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(tidyverse)
+library(ggbiplot)
+library(ggrepel)
+library(plyr)
+library(lsa)
+library(flexclust)
+```
+
+
+
+```{r cars}
+recode_votes = function(vote) {
+  if(is.na(vote)) {
+    return(1)
+  } else if(vote == "Yea") {
+    return(2)
+  } else if(vote == "Nay") {
+    return(-2)
+  } else {
+    return(1)
+  }
+}
+```
+
+
+
+```{r pressure, echo=FALSE}
+members_1989 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1989/members.csv")
+votes_1989 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1989/votes.csv")
+
+joined_1989 = join(members_1989, votes_1989, by = "id")
+votes_1989 = joined_1989[,(-1:-6)]
+members_1989 = joined_1989[,1:6]
+
+votes_numeric_1989 = apply(votes_1989, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1989))
+dist_1989 = 1- votes_sim
+mds_1989 = cmdscale(dist_1989)
+mds_1989 = data.frame(mds_1989)
+members_and_scores_1989 = data.frame(members_1989,mds_1989)
+#members_and_scores_1989$X1 = -1*members_and_scores_1989$X1
+
+
+ggplot((members_and_scores_1989), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1989")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_2014 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2014/members.csv")
+votes_2014 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2014/votes.csv")
+
+joined_2014 = join(members_2014, votes_2014, by = "id")
+votes_2014 = joined_2014[,(-1:-6)]
+members_2014 = joined_2014[,1:6]
+
+votes_numeric_2014 = apply(votes_2014, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2014))
+dist_2014 = 1- votes_sim
+mds_2014 = cmdscale(dist_2014)
+mds_2014 = data.frame(mds_2014)
+members_and_scores_2014 = data.frame(members_2014,mds_2014)
+members_and_scores_2014$X1 = -1*members_and_scores_2014$X1
+
+
+ggplot((members_and_scores_2014), aes(x = X1, y = X2, label = display_name)) + 
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2014")+ xlab("Distance 1") + ylab("Distance 2")
+
+
+#view(mds_2014)
+#view(members_and_scores_2014)
+
+```
+
+
+
+
+
+
+
+
+
+```{r}
+members_1990 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1990/members.csv")
+votes_1990 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1990/votes.csv")
+
+joined_1990 = join(members_1990, votes_1990, by = "id")
+votes_1990 = joined_1990[,(-1:-6)]
+members_1990 = joined_1990[,1:6]
+
+votes_numeric_1990 = apply(votes_1990, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1990))
+dist_1990 = 1- votes_sim
+mds_1990 = cmdscale(dist_1990)
+mds_1990 = data.frame(mds_1990)
+members_and_scores_1990 = data.frame(members_1990,mds_1990)
+members_and_scores_1990$X1 = -1*members_and_scores_1990$X1
+
+
+ggplot((members_and_scores_1990), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1990")+ xlab("Distance 1") + ylab("Distance 2")
+```
+```{r}
+members_1991 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1991/members.csv")
+votes_1991 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1991/votes.csv")
+
+joined_1991 = join(members_1991, votes_1991, by = "id")
+votes_1991 = joined_1991[,(-1:-6)]
+members_1991 = joined_1991[,1:6]
+
+votes_numeric_1991 = apply(votes_1991, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1991))
+dist_1991 = 1- votes_sim
+mds_1991 = cmdscale(dist_1991)
+mds_1991 = data.frame(mds_1991)
+members_and_scores_1991 = data.frame(members_1991,mds_1991)
+#members_and_scores_1991$X1 = -1*members_and_scores_1991$X1
+
+
+ggplot((members_and_scores_1991), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1991")+ xlab("Distance 1") + ylab("Distance 2")
+```
+```{r}
+members_1992 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1992/members.csv")
+votes_1992 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1992/votes.csv")
+
+joined_1992 = join(members_1992, votes_1992, by = "id")
+votes_1992 = joined_1992[,(-1:-6)]
+members_1992 = joined_1992[,1:6]
+
+votes_numeric_1992 = apply(votes_1992, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1992))
+dist_1992 = 1- votes_sim
+mds_1992 = cmdscale(dist_1992)
+mds_1992 = data.frame(mds_1992)
+members_and_scores_1992 = data.frame(members_1992,mds_1992)
+members_and_scores_1992$X1 = -1*members_and_scores_1992$X1
+
+
+ggplot((members_and_scores_1992), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1992")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_1993 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1993/members.csv")
+votes_1993 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1993/votes.csv")
+
+joined_1993 = join(members_1993, votes_1993, by = "id")
+votes_1993 = joined_1993[,(-1:-6)]
+members_1993 = joined_1993[,1:6]
+
+votes_numeric_1993 = apply(votes_1993, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1993))
+dist_1993 = 1- votes_sim
+mds_1993 = cmdscale(dist_1993)
+mds_1993 = data.frame(mds_1993)
+members_and_scores_1993 = data.frame(members_1993,mds_1993)
+members_and_scores_1993$X1 = -1*members_and_scores_1993$X1
+
+
+ggplot((members_and_scores_1993), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1993")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_1994 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1994/members.csv")
+votes_1994 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1994/votes.csv")
+
+joined_1994 = join(members_1994, votes_1994, by = "id")
+votes_1994 = joined_1994[,(-1:-6)]
+members_1994 = joined_1994[,1:6]
+
+votes_numeric_1994 = apply(votes_1994, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1994))
+dist_1994 = 1- votes_sim
+mds_1994 = cmdscale(dist_1994)
+mds_1994 = data.frame(mds_1994)
+members_and_scores_1994 = data.frame(members_1994,mds_1994)
+#members_and_scores_1994$X1 = -1*members_and_scores_1994$X1
+
+
+ggplot((members_and_scores_1994), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1994")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_1995 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1995/members.csv")
+votes_1995 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1995/votes.csv")
+
+joined_1995 = join(members_1995, votes_1995, by = "id")
+votes_1995 = joined_1995[,(-1:-6)]
+members_1995 = joined_1995[,1:6]
+
+votes_numeric_1995 = apply(votes_1995, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1995))
+dist_1995 = 1- votes_sim
+mds_1995 = cmdscale(dist_1995)
+mds_1995 = data.frame(mds_1995)
+members_and_scores_1995 = data.frame(members_1995,mds_1995)
+#members_and_scores_1995$X1 = -1*members_and_scores_1995$X1
+
+
+ggplot((members_and_scores_1995), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1995")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_1996 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1996/members.csv")
+votes_1996 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1996/votes.csv")
+
+joined_1996 = join(members_1996, votes_1996, by = "id")
+votes_1996 = joined_1996[,(-1:-6)]
+members_1996 = joined_1996[,1:6]
+
+votes_numeric_1996 = apply(votes_1996, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1996))
+dist_1996 = 1- votes_sim
+mds_1996 = cmdscale(dist_1996)
+mds_1996 = data.frame(mds_1996)
+members_and_scores_1996 = data.frame(members_1996,mds_1996)
+members_and_scores_1996$X1 = -1*members_and_scores_1996$X1
+
+
+ggplot((members_and_scores_1996), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1996")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_1997 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1997/members.csv")
+votes_1997 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1997/votes.csv")
+
+joined_1997 = join(members_1997, votes_1997, by = "id")
+votes_1997 = joined_1997[,(-1:-6)]
+members_1997 = joined_1997[,1:6]
+
+votes_numeric_1997 = apply(votes_1997, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1997))
+dist_1997 = 1- votes_sim
+mds_1997 = cmdscale(dist_1997)
+mds_1997 = data.frame(mds_1997)
+members_and_scores_1997 = data.frame(members_1997,mds_1997)
+members_and_scores_1997$X1 = -1*members_and_scores_1997$X1
+
+
+ggplot((members_and_scores_1997), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1997")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_1998 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1998/members.csv")
+votes_1998 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1998/votes.csv")
+
+joined_1998 = join(members_1998, votes_1998, by = "id")
+votes_1998 = joined_1998[,(-1:-6)]
+members_1998 = joined_1998[,1:6]
+
+votes_numeric_1998 = apply(votes_1998, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1998))
+dist_1998 = 1- votes_sim
+mds_1998 = cmdscale(dist_1998)
+mds_1998 = data.frame(mds_1998)
+members_and_scores_1998 = data.frame(members_1998,mds_1998)
+members_and_scores_1998$X1 = -1*members_and_scores_1998$X1
+
+
+ggplot((members_and_scores_1998), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1998")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_1999 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1999/members.csv")
+votes_1999 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/1999/votes.csv")
+
+joined_1999 = join(members_1999, votes_1999, by = "id")
+votes_1999 = joined_1999[,(-1:-6)]
+members_1999 = joined_1999[,1:6]
+
+votes_numeric_1999 = apply(votes_1999, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_1999))
+dist_1999 = 1- votes_sim
+mds_1999 = cmdscale(dist_1999)
+mds_1999 = data.frame(mds_1999)
+members_and_scores_1999 = data.frame(members_1999,mds_1999)
+#members_and_scores_1999$X1 = -1*members_and_scores_1999$X1
+
+
+ggplot((members_and_scores_1999), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 1999")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_2000 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2000/members.csv")
+votes_2000 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2000/votes.csv")
+
+joined_2000 = join(members_2000, votes_2000, by = "id")
+votes_2000 = joined_2000[,(-1:-6)]
+members_2000 = joined_2000[,1:6]
+
+votes_numeric_2000 = apply(votes_2000, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2000))
+dist_2000 = 1- votes_sim
+mds_2000 = cmdscale(dist_2000)
+mds_2000 = data.frame(mds_2000)
+members_and_scores_2000 = data.frame(members_2000,mds_2000)
+#members_and_scores_2000$X1 = -1*members_and_scores_2000$X1
+
+
+ggplot((members_and_scores_2000), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2000")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+
+```{r}
+members_2001 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2001/members.csv")
+votes_2001 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2001/votes.csv")
+
+joined_2001 = join(members_2001, votes_2001, by = "id")
+votes_2001 = joined_2001[,(-1:-6)]
+members_2001 = joined_2001[,1:6]
+
+votes_numeric_2001 = apply(votes_2001, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2001))
+dist_2001 = 1- votes_sim
+mds_2001 = cmdscale(dist_2001)
+mds_2001 = data.frame(mds_2001)
+members_and_scores_2001 = data.frame(members_2001,mds_2001)
+members_and_scores_2001$X1 = -1*members_and_scores_2001$X1
+
+
+ggplot((members_and_scores_2001), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2001")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_2002 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2002/members.csv")
+votes_2002 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2002/votes.csv")
+
+joined_2002 = join(members_2002, votes_2002, by = "id")
+votes_2002 = joined_2002[,(-1:-6)]
+members_2002 = joined_2002[,1:6]
+
+votes_numeric_2002 = apply(votes_2002, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2002))
+dist_2002 = 1- votes_sim
+mds_2002 = cmdscale(dist_2002)
+mds_2002 = data.frame(mds_2002)
+members_and_scores_2002 = data.frame(members_2002,mds_2002)
+members_and_scores_2002$X1 = -1*members_and_scores_2002$X1
+
+
+ggplot((members_and_scores_2002), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2002")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+```{r}
+members_2003 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2003/members.csv")
+votes_2003 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2003/votes.csv")
+
+joined_2003 = join(members_2003, votes_2003, by = "id")
+votes_2003 = joined_2003[,(-1:-6)]
+members_2003 = joined_2003[,1:6]
+
+votes_numeric_2003 = apply(votes_2003, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2003))
+dist_2003 = 1- votes_sim
+mds_2003 = cmdscale(dist_2003)
+mds_2003 = data.frame(mds_2003)
+members_and_scores_2003 = data.frame(members_2003,mds_2003)
+#members_and_scores_2003$X1 = -1*members_and_scores_2003$X1
+
+
+ggplot((members_and_scores_2003), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2003")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_2004 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2004/members.csv")
+votes_2004 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2004/votes.csv")
+
+joined_2004 = join(members_2004, votes_2004, by = "id")
+votes_2004 = joined_2004[,(-1:-6)]
+members_2004 = joined_2004[,1:6]
+
+votes_numeric_2004 = apply(votes_2004, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2004))
+dist_2004 = 1- votes_sim
+mds_2004 = cmdscale(dist_2004)
+mds_2004 = data.frame(mds_2004)
+members_and_scores_2004 = data.frame(members_2004,mds_2004)
+#members_and_scores_2004$X1 = -1*members_and_scores_2004$X1
+
+
+ggplot((members_and_scores_2004), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2004")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+
+
+```{r}
+members_2005 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2005/members.csv")
+votes_2005 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2005/votes.csv")
+
+joined_2005 = join(members_2005, votes_2005, by = "id")
+votes_2005 = joined_2005[,(-1:-6)]
+members_2005 = joined_2005[,1:6]
+
+votes_numeric_2005 = apply(votes_2005, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2005))
+dist_2005 = 1- votes_sim
+mds_2005 = cmdscale(dist_2005)
+mds_2005 = data.frame(mds_2005)
+members_and_scores_2005 = data.frame(members_2005,mds_2005)
+members_and_scores_2005$X1 = -1*members_and_scores_2005$X1
+
+
+ggplot((members_and_scores_2005), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2005")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_2006 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2006/members.csv")
+votes_2006 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2006/votes.csv")
+
+joined_2006 = join(members_2006, votes_2006, by = "id")
+votes_2006 = joined_2006[,(-1:-6)]
+members_2006 = joined_2006[,1:6]
+
+votes_numeric_2006 = apply(votes_2006, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2006))
+dist_2006 = 1- votes_sim
+mds_2006 = cmdscale(dist_2006)
+mds_2006 = data.frame(mds_2006)
+members_and_scores_2006 = data.frame(members_2006,mds_2006)
+#members_and_scores_2006$X1 = -1*members_and_scores_2006$X1
+
+
+ggplot((members_and_scores_2006), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2006")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_2007 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2007/members.csv")
+votes_2007 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2007/votes.csv")
+
+joined_2007 = join(members_2007, votes_2007, by = "id")
+votes_2007 = joined_2007[,(-1:-6)]
+members_2007 = joined_2007[,1:6]
+
+votes_numeric_2007 = apply(votes_2007, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2007))
+dist_2007 = 1- votes_sim
+mds_2007 = cmdscale(dist_2007)
+mds_2007 = data.frame(mds_2007)
+members_and_scores_2007 = data.frame(members_2007,mds_2007)
+#members_and_scores_2007$X1 = -1*members_and_scores_2007$X1
+
+
+ggplot((members_and_scores_2007), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2007")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+```{r}
+members_2008 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2008/members.csv")
+votes_2008 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2008/votes.csv")
+
+joined_2008 = join(members_2008, votes_2008, by = "id")
+votes_2008 = joined_2008[,(-1:-6)]
+members_2008 = joined_2008[,1:6]
+
+votes_numeric_2008 = apply(votes_2008, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2008))
+dist_2008 = 1- votes_sim
+mds_2008 = cmdscale(dist_2008)
+mds_2008 = data.frame(mds_2008)
+members_and_scores_2008 = data.frame(members_2008,mds_2008)
+#members_and_scores_2008$X1 = -1*members_and_scores_2008$X1
+
+
+ggplot((members_and_scores_2008), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2008")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+```{r}
+members_2009 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2009/members.csv")
+votes_2009 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2009/votes.csv")
+
+joined_2009 = join(members_2009, votes_2009, by = "id")
+votes_2009 = joined_2009[,(-1:-6)]
+members_2009 = joined_2009[,1:6]
+
+votes_numeric_2009 = apply(votes_2009, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2009))
+dist_2009 = 1- votes_sim
+mds_2009 = cmdscale(dist_2009)
+mds_2009 = data.frame(mds_2009)
+members_and_scores_2009 = data.frame(members_2009,mds_2009)
+members_and_scores_2009$X1 = -1*members_and_scores_2009$X1
+
+
+ggplot((members_and_scores_2009), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2009")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+```{r}
+members_2010 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2010/members.csv")
+votes_2010 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2010/votes.csv")
+
+joined_2010 = join(members_2010, votes_2010, by = "id")
+votes_2010 = joined_2010[,(-1:-6)]
+members_2010 = joined_2010[,1:6]
+
+votes_numeric_2010 = apply(votes_2010, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2010))
+dist_2010 = 1- votes_sim
+mds_2010 = cmdscale(dist_2010)
+mds_2010 = data.frame(mds_2010)
+members_and_scores_2010 = data.frame(members_2010,mds_2010)
+members_and_scores_2010$X1 = -1*members_and_scores_2010$X1
+
+
+ggplot((members_and_scores_2010), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2010")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+members_2011 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2011/members.csv")
+votes_2011 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2011/votes.csv")
+
+joined_2011 = join(members_2011, votes_2011, by = "id")
+votes_2011 = joined_2011[,(-1:-6)]
+members_2011 = joined_2011[,1:6]
+
+votes_numeric_2011 = apply(votes_2011, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2011))
+dist_2011 = 1- votes_sim
+mds_2011 = cmdscale(dist_2011)
+mds_2011 = data.frame(mds_2011)
+members_and_scores_2011 = data.frame(members_2011,mds_2011)
+#members_and_scores_2011$X1 = -1*members_and_scores_2011$X1
+
+
+ggplot((members_and_scores_2011), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2011")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+
+
+
+
+```{r}
+members_2012 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2012/members.csv")
+votes_2012 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2012/votes.csv")
+
+joined_2012 = join(members_2012, votes_2012, by = "id")
+votes_2012 = joined_2012[,(-1:-6)]
+members_2012 = joined_2012[,1:6]
+
+votes_numeric_2012 = apply(votes_2012, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2012))
+dist_2012 = 1- votes_sim
+mds_2012 = cmdscale(dist_2012)
+mds_2012 = data.frame(mds_2012)
+members_and_scores_2012 = data.frame(members_2012,mds_2012)
+members_and_scores_2012$X1 = -1*members_and_scores_2012$X1
+#members_and_scores_2012$X2 = -1*members_and_scores_2012$X2
+
+
+ggplot((members_and_scores_2012), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2012")+ xlab("Distance 1") + ylab("Distance 2")
+
+```
+```{r}
+view(mds_2012)
+view(members_and_scores_2012)
+```
+
+
+```{r}
+members_2013 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2013/members.csv")
+votes_2013 = read.csv("C:/Users/Sushant/Desktop/EDA/Assignments/Mini Project 2/congress/congress/2013/votes.csv")
+
+joined_2013 = join(members_2013, votes_2013, by = "id")
+votes_2013 = joined_2013[,(-1:-6)]
+members_2013 = joined_2013[,1:6]
+
+votes_numeric_2013 = apply(votes_2013, 1:2, recode_votes)
+
+votes_sim = cosine(t(votes_numeric_2013))
+dist_2013 = 1- votes_sim
+mds_2013 = cmdscale(dist_2013)
+mds_2013 = data.frame(mds_2013)
+members_and_scores_2013 = data.frame(members_2013,mds_2013)
+members_and_scores_2013$X1 = -1*members_and_scores_2013$X1
+
+
+ggplot((members_and_scores_2013), aes(x = X1, y = X2, label = display_name)) +
+ geom_point(aes(color=party)) + coord_fixed() + ggtitle("MDS plot for Senators in 2013")+ xlab("Distance 1") + ylab("Distance 2") + gg
+```
+
+```{r}
+d1<-rep()
+r1<-rep()
+d2<-rep()
+r2<-rep()
+dist<-rep()
+#view(members_and_scores_1989)
+years = 1989:2014
+for (year in years){
+eval(parse(text=paste("x<-members_and_scores_",year,"%>%dplyr::group_by(party)%>%dplyr::summarise(m1=mean(X1),m2=mean(X2)) %>% pivot_wider(names_from = party,values_from = c(m1,m2))",sep = "")))
+d1 <- append(d1,x$m1_D)
+r1 <- append(r1,x$m1_R)
+d2 <- append(d2,x$m2_D)
+r2 <- append(r2,x$m2_R)
+}
+
+df <- data.frame(d1,d2)
+df2 <- data.frame(r1,r2)
+#view(p_dist)
+#view(df)
+#view(df2)
+p_dist2 <- dist2(df,df2,method="euclidean",p=2)
+p_dist2 <- diag(p_dist2)
+p_dist2 <- data.frame(p_dist2)
+#view(p_dist2)
+#view(p_dist2.)
+
+
+p_dist2_year = data.frame(p_dist2,years)
+p_dist2_year
+
+ggplot(p_dist2_year)+geom_line(aes(x=years,y=p_dist2),color="orange") + xlab("years")+ylab("Distance Values")+ggtitle("Distance between the parties from 1989 to 2014")
+```
+
+```{r}
+d<-rep()
+r<-rep()
+for (year in years){
+eval(parse(text=paste("x<-members_and_scores_",year,"%>%dplyr::group_by(party)%>%dplyr::summarise(m1=mean(X1))%>%pivot_wider(names_from =party,values_from=m1)",sep = "")))
+d <- append(d,x$D)
+r <- append(r,x$R)
+}
+
+
+#view(d)
+#view(r)
+d_r <- data.frame(cbind(d,r,years))
+#view(d_r)
+ggplot(d_r,aes(color=Party))+ geom_line(aes(x=years,y=d,color="Democrats"))+ geom_line(aes(x=years,y=r,color="Republicans")) +
+  labs(x="Years",y="Average distance") + ggtitle("Polarity of Both Parties over the years")
+
+```
+
+
+```{r}
+c_members=intersect(members_1989,members_1990)
+for(year in years){
+eval(parse(text=paste("c_members = intersect(c_members, members_",year,")",sep="")))  
+}
+all_senator = plyr::join(members_1989,members_1990[,c('id','party')],by="id",type="inner")
+
+
+for(year in years){
+eval(parse(text=paste("all_senator <- join(all_senator, members_",year,"[,c('id','party')],by='id',type='inner')",sep="")))  
+}
+i=1
+id_list <- c_members$id
+
+senator_name<- paste("`",c_members$first_name," ",c_members$last_name,"`",sep="")
+
+
+for (id in id_list){
+  eval(parse(text=paste(senator_name[i],"=c()",sep="")))
+  for (year in years){
+    eval(parse(text=paste(senator_name[i],"<-c(",senator_name[i],",(members_and_scores_",year,"%>% filter(id=='",id,"'))$X1)",sep="")))
+  }
+  eval(parse(text=paste("d_r<- cbind(d_r,",senator_name[i],")",sep="")))
+  i=i+1
+}
+d_r$avg<-(d_r$d+d_r$r)/2
+d_r_plot<-d_r[,c(1,2,3,11,12,16)]
+
+a= abs(r-`Mitch McConnell`)
+b= abs(d-`Mitch McConnell`)
+d_r_plot$diff1=a
+d_r_plot$diff2=b
+
+c= abs(r-`John McCain`)
+d= abs(d-`John McCain`)
+d_r_plot$diff3=c 
+d_r_plot$diff4=d 
+
+
+ggplot(d_r_plot,aes(color=party)) + geom_line(aes(x=years,y=diff1,color="Republicans")) + geom_line(aes(x=years,y=diff2,color="Democrats")) + 
+  xlab("years")+ylab("Distance Values") + ggtitle("Distance between Senator Mitch McConell and the parties")
+
+ggplot(d_r_plot,aes(color=party)) + geom_line(aes(x=years,y=diff3,color="Republicans")) + geom_line(aes(x=years,y=diff4,color="Democrats"))+ xlab("years")+ylab("Distance Values") + ggtitle("Distance between Senator John McCain and the parties")
+
+
+ggplot(d_r_plot) + geom_line(aes(x=years,y=d,color='Democrats')) + geom_line(aes(x=years,y=r,color='Republicans')) + geom_line(aes(x=years,y=`Mitch McConnell`,color='Mitch McConnell')) + xlab("years")+ylab("Distance Values") + ggtitle("Relationship of Party Ideology and Ideology of Senator Mitch McConnell") +
+  scale_color_manual(name='Senators and Parties',values = c('Democrats'='orange','Republicans'='green','Mitch McConnell'='violetred4'))
+
+
+ggplot(d_r_plot) + geom_line(aes(x=years,y=d,color='Democrats')) + geom_line(aes(x=years,y=r,color='Republicans')) + geom_line(aes(x=years,y=`John McCain`,color='John McCain')) + xlab("years")+ylab("Distance Values") + ggtitle("Relationship of Party Ideology and Ideology of Senator John McCain") +
+  scale_color_manual(name='Senators and Parties',values = c('Democrats'='orange','Republicans'='green','John McCain'='violetred4'))
+
+```
+
+
